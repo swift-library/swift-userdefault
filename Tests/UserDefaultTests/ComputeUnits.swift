@@ -1,4 +1,4 @@
-//===--- swift_package_template.swift -------------------------------------===//
+//===--- ComputeUnits.swift -----------------------------------------------===//
 //
 // This source file is part of the swift-library open source project
 //
@@ -12,5 +12,9 @@
 //
 //===----------------------------------------------------------------------===//
 
-// The Swift Programming Language
-// https://docs.swift.org/swift-book
+public enum ComputeUnits: Int, @unchecked Sendable {
+  case cpuOnly = 0
+  case cpuAndGPU = 1
+  case all = 2
+  case cpuAndNeuralEngine = 3
+}

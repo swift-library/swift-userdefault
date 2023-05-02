@@ -1,0 +1,91 @@
+//===--- UserDefault.swift ------------------------------------------------===//
+//
+// This source file is part of the swift-library open source project
+//
+// Created by Xudong Xu on 4/23/23.
+//
+// Copyright (c) 2023 Xudong Xu <showxdxu@gmail.com> and the swift-library project authors
+//
+// See https://swift-library.github.io/LICENSE.txt for license information
+// See https://swift-library.github.io/CONTRIBUTORS.txt for the list of swift-library project authors
+// See https://github.com/swift-library for the list of swift-library projects
+//
+//===----------------------------------------------------------------------===//
+%{
+impl_types = {
+  'RawRepresentable': 'RawRepresentableImpl',
+  'Codable': 'CodableImpl',
+  'Bool': 'UserDefaultImpl',
+  'Int': 'UserDefaultImpl',
+  'Float': 'UserDefaultImpl',
+  'Double': 'UserDefaultImpl',
+  'String': 'UserDefaultImpl',
+}
+operators = {
+  'RawRepresentable': ':',
+  'Codable': ':',
+  'Bool': '==',
+  'Int': '==',
+  'Float': '==',
+  'Double': '==',
+  'String': '==',
+}
+types = list(impl_types.keys())
+}%
+import class Foundation.UserDefaults
+
+/// A propertyWrapper that wrap UserDefaults set/get value operations.
+///
+/// Use case:
+///
+///     public enum Keys: String {
+///       case model
+///       case safetyCheckerDisclaimer
+///       case computeUnits
+///     }
+///
+///     @UserDefault(key: Keys.model)
+///     public var currentModel: ModelInfo? = nil
+///
+///     @UserDefault(key: Keys.safetyCheckerDisclaimer)
+///     public var safetyCheckerDisclaimerRead: Bool = false
+///
+///     @UserDefault(key: Keys.computeUnits)
+///     public var preferdComputeUnits: MLComputeUnits = .cpuAndNeuralEngine
+///
+/// Conforming to @propertyWrapper
+/// =========================================
+@propertyWrapper
+public struct UserDefault<T> {
+  
+  public var wrappedValue: T {
+    get { impl.object(forKey: key) ?? defaultValue }
+    set { impl.set(newValue, forKey: key) }
+  }
+
+  var defaultValue: T
+  var key: String
+  var impl: (any UserDefaultWrapper<T>)
+% for type in types:
+%     impl_type = impl_types[type]
+%     operator = operators[type]
+
+  public init(
+    wrappedValue: T,
+    key: String,
+    userDefaults: UserDefaults = .standard) where T ${operator} ${type}
+  {
+    self.defaultValue = wrappedValue
+    self.key = key
+    self.impl = ${impl_type}(userDefaults)
+  }
+  
+  public init<Key>(
+    wrappedValue: T,
+    key: Key,
+    userDefaults: UserDefaults = .standard) where T ${operator} ${type}, Key: RawRepresentable, Key.RawValue == String
+  {
+    self.init(wrappedValue: wrappedValue, key: key.rawValue, userDefaults: userDefaults)
+  }
+% end
+}

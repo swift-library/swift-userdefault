@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "swift-gyb",
+        "repositoryURL": "https://github.com/swift-library/swift-gyb",
+        "state": {
+          "branch": null,
+          "revision": "f76833ee01a7f9c8cf0dd0a7e2ddb7083bdc28dd",
+          "version": "0.0.1"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
