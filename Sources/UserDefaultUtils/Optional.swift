@@ -1,8 +1,8 @@
-//===--- swift_package_templateTests.swift --------------------------------===//
+//===--- Optional.swift ---------------------------------------------------===//
 //
 // This source file is part of the swift-library open source project
 //
-// Created by Xudong Xu on 4/23/23.
+// Created by Xudong Xu on 5/2/23.
 //
 // Copyright (c) 2023 Xudong Xu <showxdxu@gmail.com> and the swift-library project authors
 //
@@ -12,15 +12,15 @@
 //
 //===----------------------------------------------------------------------===//
 
-import XCTest
-@testable import swift_package_template
+@_exported import UserDefault
 
-final class swift_package_templateTests: XCTestCase {
-  func testExample() throws {
-    // XCTest Documenation
-    // https://developer.apple.com/documentation/xctest
-    
-    // Defining Test Cases and Test Methods
-    // https://developer.apple.com/documentation/xctest/defining_test_cases_and_test_methods
+extension Optional: RawRepresentable where Wrapped: RawRepresentable {
+  
+  public var rawValue: Wrapped.RawValue? {
+    map { $0.rawValue }
+  }
+  
+  public init?(rawValue: Wrapped.RawValue?) {
+    self = rawValue.flatMap(Wrapped.init(rawValue:)).map { .some($0) } ?? .none
   }
 }
