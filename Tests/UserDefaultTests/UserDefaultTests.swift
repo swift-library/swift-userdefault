@@ -13,7 +13,8 @@
 //===----------------------------------------------------------------------===//
 
 import XCTest
-@testable import UserDefaultUtils
+import UserDefault
+@_spi(Private) @testable import UserDefaultUtils
 
 final class UserDefaultTests: XCTestCase {
   

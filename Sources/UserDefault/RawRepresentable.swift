@@ -15,6 +15,7 @@
 import class Foundation.UserDefaults
 
 /// FIXME: @showxu use [swift/gyb.py](https://github.com/apple/swift/blob/main/utils/gyb.py) plugin to generate `String`, `Float`, `Double`, `Bool`, `URL`
+@_spi(Private)
 public extension UserDefaults {
   
   /// Sets the value of the specified default key to the specified integer value.
