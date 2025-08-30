@@ -15,10 +15,11 @@
 import class Foundation.UserDefaults
 
 /// A wrapper that wrap UserDefaults set/get value operations.
+///
 public protocol UserDefaultWrapper<Value> {
   
   associatedtype Value
-  
+
   var userDefaults: UserDefaults { get }
   
   /// Set object into UserDefaults, immediately stores a value (or removes the value if nil is passed as the value)
