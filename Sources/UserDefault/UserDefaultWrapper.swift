@@ -45,11 +45,13 @@ public extension UserDefaultWrapper where Value: Any {
 
   /// Sets the value of the specified default key.
   ///
+  /// Passing `nil`, or an optional value that is `nil`, removes the key.
+  ///
   /// - Parameters:
   ///   - value: The object to store in the defaults database.
   ///   - defaultName: The key with which to associate the value.
   func set(_ value: Value?, forKey defaultName: String) {
-    userDefaults.set(value, forKey: defaultName)
+    userDefaults.setPropertyListValue(value, forKey: defaultName)
   }
 
   /// Returns the object associated with the specified key.
@@ -64,10 +66,12 @@ public extension UserDefaultWrapper where Value: Any {
 /// FIXME: @showxu use [swift/gyb.py](https://github.com/apple/swift/blob/main/utils/gyb.py) plugin to generate `Float`, `Double`, `Bool`, `URL`
 public extension UserDefaultWrapper where Value: RawRepresentable {
   
-  /// Sets the value of the specified default key to the specified integer value.
+  /// Sets the value of the specified default key to the raw value of the specified value.
+  ///
+  /// Passing `nil`, or a value whose raw value is `nil`, removes the key.
   ///
   /// - Parameters:
-  ///   - value: The integer value to store in the defaults database.
+  ///   - value: The value whose `rawValue` to store in the defaults database.
   ///   - defaultName: The key with which to associate the value.
   func set(_ value: Value?, forKey defaultName: String) {
     userDefaults.set(value.flatMap { $0 }, forKey: defaultName)
@@ -86,9 +90,13 @@ public extension UserDefaultWrapper where Value: Encodable {
   
   /// Sets the `Encodable` value of the specified default key.
   ///
+  /// The value is stored as JSON data. Passing `nil`, or an optional value
+  /// that is `nil`, removes the key. A value that `JSONEncoder` can't encode
+  /// stops the program.
+  ///
   /// - Parameters:
-  ///   - object: The object to store in the defaults database.
-  ///   - forKey: The key with which to associate the value.
+  ///   - value: The value to store in the defaults database.
+  ///   - defaultName: The key with which to associate the value.
   func set(_ value: Value?, forKey defaultName: String) {
     do {
       try userDefaults.set(value, forKey: defaultName)

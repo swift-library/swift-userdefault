@@ -26,6 +26,7 @@ final class UserDefaultTests: XCTestCase {
     case version
     case safetyCheckerDisclaimer
     case computeUnits
+    case nickname
   }
   ///
   @UserDefault(key: Keys.model, userDefaults: UserDefaultTests.userDefaults)
@@ -42,6 +43,9 @@ final class UserDefaultTests: XCTestCase {
   ///
   @UserDefault(key: Keys.computeUnits, userDefaults: UserDefaultTests.userDefaults)
   public var preferredComputeUnits: ComputeUnits = ComputeUnits.cpuAndNeuralEngine
+  ///
+  @UserDefault(key: Keys.nickname, userDefaults: UserDefaultTests.userDefaults)
+  public var nickname: String? = "Guest"
   
   var userDefaults: UserDefaults { Self.userDefaults }
   
@@ -128,9 +132,43 @@ final class UserDefaultTests: XCTestCase {
     XCTAssertEqual(modelInfo, modelInfo3)
     
     currentModel = nil
-    let modelInfo4: ModelInfo? = try userDefaults.object(forKey: Keys.model.rawValue) ?? nil
-    XCTAssertNil(modelInfo4)
+    XCTAssertNil(userDefaults.object(forKey: Keys.model.rawValue))
     XCTAssertNil(currentModel)
+  }
+  
+  func testAssigningNilToOptionalRawRepresentableRemovesKey() throws {
+    systemComputeUnits = .cpuAndGPU
+    XCTAssertEqual(
+      userDefaults.object(forKey: Keys.computeUnits.rawValue) as? Int,
+      ComputeUnits.cpuAndGPU.rawValue)
+    
+    systemComputeUnits = nil
+    XCTAssertNil(userDefaults.object(forKey: Keys.computeUnits.rawValue))
+    XCTAssertEqual(systemComputeUnits, .cpuOnly)
+  }
+  
+  func testAssigningNilToOptionalCodableRemovesKey() throws {
+    nickname = "Ada"
+    XCTAssertNotNil(userDefaults.data(forKey: Keys.nickname.rawValue))
+    XCTAssertEqual(nickname, "Ada")
+    
+    nickname = nil
+    XCTAssertNil(userDefaults.object(forKey: Keys.nickname.rawValue))
+    XCTAssertEqual(nickname, "Guest")
+  }
+  
+  func testSettingNilRemovesKey() throws {
+    let rawValueKey = "rawValue"
+    userDefaults.set(ComputeUnits.all, forKey: rawValueKey)
+    XCTAssertNotNil(userDefaults.object(forKey: rawValueKey))
+    userDefaults.set(nil as ComputeUnits?, forKey: rawValueKey)
+    XCTAssertNil(userDefaults.object(forKey: rawValueKey))
+    
+    let codableKey = "codable"
+    try userDefaults.set(modelInfo(), forKey: codableKey)
+    XCTAssertNotNil(userDefaults.object(forKey: codableKey))
+    try userDefaults.set(nil as ModelInfo?, forKey: codableKey)
+    XCTAssertNil(userDefaults.object(forKey: codableKey))
   }
   
   func modelInfo() -> ModelInfo {

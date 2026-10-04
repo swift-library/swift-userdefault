@@ -18,13 +18,16 @@ import class Foundation.UserDefaults
 @_spi(Private)
 public extension UserDefaults {
   
-  /// Sets the value of the specified default key to the specified integer value.
+  /// Sets the value of the specified default key to the raw value of the
+  /// specified `RawRepresentable` value.
+  ///
+  /// Passing `nil`, or a value whose raw value is `nil`, removes the key.
   ///
   /// - Parameters:
-  ///   - value: The rawValue of `RawRepresentable` to store in the defaults database.
+  ///   - value: The `RawRepresentable` value whose `rawValue` to store in the defaults database.
   ///   - defaultName: The key with which to associate the value.
   func set<T>(_ value: T?, forKey defaultName: String) where T: RawRepresentable {
-    set(value?.rawValue as Any, forKey: defaultName)
+    setPropertyListValue(value?.rawValue, forKey: defaultName)
   }
   
   /// Returns the `RawRepresentable` with rawValue associated with the specified key.
