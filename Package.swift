@@ -1,4 +1,4 @@
-// swift-tools-version: 5.5
+// swift-tools-version: 5.8
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -24,7 +24,7 @@ let package = Package(
       ]),
   ],
   dependencies: [
-    .package(url: "https://github.com/swift-library/swift-gyb", from: "0.0.1"),
+    .package(url: "https://github.com/swift-library/swift-gyb", from: "0.0.2"),
   ],
   targets: [
     // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -34,7 +34,7 @@ let package = Package(
     
     .target(
       name: "UserDefault",
-      plugins: [.plugin(name: "Gyb", package: "swift-gyb")]),
+      plugins: [.plugin(name: "GybPlugin", package: "swift-gyb")]),
     
     .testTarget(
       name: "UserDefaultTests",
