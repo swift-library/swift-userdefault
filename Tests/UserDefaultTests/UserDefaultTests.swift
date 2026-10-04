@@ -46,6 +46,16 @@ final class UserDefaultTests: XCTestCase {
   ///
   @UserDefault(key: Keys.nickname, userDefaults: UserDefaultTests.userDefaults)
   public var nickname: String? = "Guest"
+  ///
+  @UserDefault(key: Keys.model, userDefaults: UserDefaultTests.userDefaults)
+  public var requiredModel: ModelInfo = UserDefaultTests.defaultModel
+  
+  static let defaultModel = ModelInfo(
+    modelId: "default/modelId",
+    modelVersion: "0.0.0",
+    originalAttentionSuffix: "original",
+    splitAttentionSuffix: "split_einsum",
+    supportsEncoder: false)
   
   var userDefaults: UserDefaults { Self.userDefaults }
   
@@ -154,6 +164,28 @@ final class UserDefaultTests: XCTestCase {
     
     nickname = nil
     XCTAssertNil(userDefaults.object(forKey: Keys.nickname.rawValue))
+    XCTAssertEqual(nickname, "Guest")
+  }
+  
+  func testUndecodableDataReadsDefaultValue() throws {
+    let key = Keys.model.rawValue
+    requiredModel = modelInfo()
+    XCTAssertEqual(requiredModel, modelInfo())
+    
+    userDefaults.set(Data("not json".utf8) as Any, forKey: key)
+    XCTAssertEqual(requiredModel, Self.defaultModel)
+    XCTAssertNil(currentModel)
+    XCTAssertThrowsError(try userDefaults.object(forKey: key) as ModelInfo?)
+    
+    userDefaults.set(Data(#"{"modelId":1}"#.utf8) as Any, forKey: key)
+    XCTAssertEqual(requiredModel, Self.defaultModel)
+    XCTAssertNil(currentModel)
+    
+    userDefaults.set("not data" as Any, forKey: key)
+    XCTAssertEqual(requiredModel, Self.defaultModel)
+    XCTAssertNil(currentModel)
+    
+    userDefaults.set(Data("[1, 2]".utf8) as Any, forKey: Keys.nickname.rawValue)
     XCTAssertEqual(nickname, "Guest")
   }
   

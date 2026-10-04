@@ -34,30 +34,44 @@ types = list(impl_types.keys())
 }%
 import class Foundation.UserDefaults
 
-/// A propertyWrapper that wrap UserDefaults set/get value operations.
+/// A property wrapper that stores a value in `UserDefaults` under a key.
 ///
-/// Use case:
+/// Declare the property with a key and a default value:
 ///
-///     public enum Keys: String {
-///       case model
-///       case safetyCheckerDisclaimer
-///       case computeUnits
+///     enum Keys: String {
+///       case launchCount
+///       case theme
+///       case account
 ///     }
 ///
-///     @UserDefault(key: Keys.model)
-///     public var currentModel: ModelInfo? = nil
+///     @UserDefault(key: Keys.launchCount)
+///     var launchCount = 0
 ///
-///     @UserDefault(key: Keys.safetyCheckerDisclaimer)
-///     public var safetyCheckerDisclaimerRead: Bool = false
+///     @UserDefault(key: Keys.theme)
+///     var theme: Theme = .light
 ///
-///     @UserDefault(key: Keys.computeUnits)
-///     public var preferdComputeUnits: MLComputeUnits = .cpuAndNeuralEngine
+///     @UserDefault(key: Keys.account)
+///     var account: Account? = nil
 ///
-/// Conforming to @propertyWrapper
-/// =========================================
+/// The type of the property selects how the value is stored:
+///
+/// - `Bool`, `Int`, `Float`, `Double`, and `String` values are stored directly.
+/// - `RawRepresentable` values are stored as their `rawValue`, which must be a
+///   property list type such as `String` or `Int`.
+/// - `Codable` values are stored as JSON data.
+///
+/// Reading the property returns its default value when the key holds no
+/// value, or a value that can't be read as `T`, such as data that
+/// `JSONDecoder` can't decode as `T`. Assigning `nil` to an optional property
+/// removes the key, so later reads also return the default value.
 @propertyWrapper
 public struct UserDefault<T> {
   
+  /// The value stored under the key, or the default value when the key holds
+  /// no value that can be read as `T`.
+  ///
+  /// Setting this property writes the new value immediately. Setting an
+  /// optional property to `nil` removes the key.
   public var wrappedValue: T {
     get { impl.object(forKey: key) ?? defaultValue }
     set { impl.set(newValue, forKey: key) }
