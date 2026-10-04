@@ -1,16 +1,14 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "swift-gyb",
-        "repositoryURL": "https://github.com/swift-library/swift-gyb",
-        "state": {
-          "branch": null,
-          "revision": "f76833ee01a7f9c8cf0dd0a7e2ddb7083bdc28dd",
-          "version": "0.0.1"
-        }
+  "pins" : [
+    {
+      "identity" : "swift-gyb",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swift-library/swift-gyb",
+      "state" : {
+        "revision" : "32a59dbfd4bca6b776490ada8ec6ccc3ad838bbd",
+        "version" : "0.0.2"
       }
-    ]
-  },
-  "version": 1
+    }
+  ],
+  "version" : 2
 }
