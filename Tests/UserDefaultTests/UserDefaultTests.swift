@@ -27,6 +27,7 @@ final class UserDefaultTests: XCTestCase {
     case safetyCheckerDisclaimer
     case computeUnits
     case nickname
+    case appearance
   }
   ///
   @UserDefault(key: Keys.model, userDefaults: UserDefaultTests.userDefaults)
@@ -49,6 +50,12 @@ final class UserDefaultTests: XCTestCase {
   ///
   @UserDefault(key: Keys.model, userDefaults: UserDefaultTests.userDefaults)
   public var requiredModel: ModelInfo = UserDefaultTests.defaultModel
+  ///
+  @UserDefault(key: Keys.appearance, userDefaults: UserDefaultTests.userDefaults)
+  public var appearance: Appearance = .light
+  ///
+  @UserDefault(key: Keys.appearance.rawValue, userDefaults: UserDefaultTests.userDefaults)
+  public var optionalAppearance: Appearance? = nil
   
   static let defaultModel = ModelInfo(
     modelId: "default/modelId",
@@ -165,6 +172,29 @@ final class UserDefaultTests: XCTestCase {
     nickname = nil
     XCTAssertNil(userDefaults.object(forKey: Keys.nickname.rawValue))
     XCTAssertEqual(nickname, "Guest")
+  }
+  
+  func testRawRepresentableCodableStoresRawValue() throws {
+    let key = Keys.appearance.rawValue
+    XCTAssertEqual(appearance, .light)
+    XCTAssertNil(optionalAppearance)
+    
+    appearance = .dark
+    XCTAssertEqual(userDefaults.object(forKey: key) as? String, "dark")
+    XCTAssertEqual(appearance, .dark)
+    XCTAssertEqual(optionalAppearance, .dark)
+    
+    userDefaults.set("light" as Any, forKey: key)
+    XCTAssertEqual(appearance, .light)
+    XCTAssertEqual(optionalAppearance, .light)
+    
+    optionalAppearance = .dark
+    XCTAssertEqual(userDefaults.object(forKey: key) as? String, "dark")
+    
+    optionalAppearance = nil
+    XCTAssertNil(userDefaults.object(forKey: key))
+    XCTAssertEqual(appearance, .light)
+    XCTAssertNil(optionalAppearance)
   }
   
   func testUndecodableDataReadsDefaultValue() throws {
