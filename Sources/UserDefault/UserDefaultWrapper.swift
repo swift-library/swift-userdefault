@@ -77,10 +77,11 @@ public extension UserDefaultWrapper where Value: RawRepresentable {
     userDefaults.set(value.flatMap { $0 }, forKey: defaultName)
   }
   
-  /// Returns the integer value associated with the specified key.
+  /// Returns the value whose raw value is associated with the specified key.
   ///
   /// - Parameter defaultName: A key in the current user‘s defaults database.
-  /// - Returns: The integer value associated with the specified key. If the specified key doesn‘t exist, this method returns 0.
+  /// - Returns: The value created from the stored raw value, or `nil` if the key
+  ///   holds no value of type `Value.RawValue` or `Value(rawValue:)` rejects the stored value.
   func object(forKey defaultName: String) -> Value? {
     userDefaults.object(forKey: defaultName)
   }

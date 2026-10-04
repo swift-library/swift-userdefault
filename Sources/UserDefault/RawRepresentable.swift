@@ -30,10 +30,11 @@ public extension UserDefaults {
     setPropertyListValue(value?.rawValue, forKey: defaultName)
   }
   
-  /// Returns the `RawRepresentable` with rawValue associated with the specified key.
+  /// Returns the `RawRepresentable` value whose raw value is associated with the specified key.
   ///
   /// - Parameter defaultName: A key in the current user‘s defaults database.
-  /// - Returns: The integer value associated with the specified key. If the specified key doesn‘t exist, this method returns 0.
+  /// - Returns: The value created from the stored raw value, or `nil` if the key
+  ///   holds no value of type `T.RawValue` or `T(rawValue:)` rejects the stored value.
   func object<T>(forKey defaultName: String) -> T? where T: RawRepresentable {
     /// In case of `nil as? Optional<Optional<T.RawValue>>` will produce `Optional<Optional<nil>>`
     guard let value = object(forKey: defaultName) else {
