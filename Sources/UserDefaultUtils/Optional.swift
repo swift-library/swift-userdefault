@@ -14,13 +14,32 @@
 
 @_exported import UserDefault
 
+/// Makes an optional of a `RawRepresentable` type `RawRepresentable`, so
+/// `UserDefault` stores an optional enumeration as its raw value.
+///
+/// The raw value of `nil` is `nil`, and the raw value of a wrapped value is
+/// the wrapped value's raw value.
 extension Optional: RawRepresentable where Wrapped: RawRepresentable {
   
   public var rawValue: Wrapped.RawValue? {
     map { $0.rawValue }
   }
   
+  /// Creates an optional from a raw value.
+  ///
+  /// A `nil` raw value creates `nil`. A raw value that `Wrapped(rawValue:)`
+  /// rejects makes this initializer fail, so `UserDefault` reads the
+  /// property's default value instead of `nil`.
+  ///
+  /// - Parameter rawValue: The raw value of the wrapped value, or `nil`.
   public init?(rawValue: Wrapped.RawValue?) {
-    self = rawValue.flatMap(Wrapped.init(rawValue:)).map { .some($0) } ?? .none
+    guard let rawValue else {
+      self = .none
+      return
+    }
+    guard let wrapped = Wrapped(rawValue: rawValue) else {
+      return nil
+    }
+    self = .some(wrapped)
   }
 }

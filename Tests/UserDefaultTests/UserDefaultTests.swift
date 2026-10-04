@@ -174,6 +174,22 @@ final class UserDefaultTests: XCTestCase {
     XCTAssertEqual(nickname, "Guest")
   }
   
+  func testUnmatchedRawValueReadsDefaultValue() throws {
+    userDefaults.set(99 as Any, forKey: Keys.computeUnits.rawValue)
+    XCTAssertEqual(preferredComputeUnits, .cpuAndNeuralEngine)
+    XCTAssertEqual(systemComputeUnits, .cpuOnly)
+    
+    userDefaults.set("sepia" as Any, forKey: Keys.appearance.rawValue)
+    XCTAssertEqual(appearance, .light)
+    XCTAssertNil(optionalAppearance)
+  }
+  
+  func testOptionalRawValueInitializer() throws {
+    XCTAssertEqual(ComputeUnits?(rawValue: 1), .some(.cpuAndGPU))
+    XCTAssertEqual(ComputeUnits?(rawValue: nil), .some(nil))
+    XCTAssertNil(ComputeUnits?(rawValue: 99))
+  }
+  
   func testRawRepresentableCodableStoresRawValue() throws {
     let key = Keys.appearance.rawValue
     XCTAssertEqual(appearance, .light)
