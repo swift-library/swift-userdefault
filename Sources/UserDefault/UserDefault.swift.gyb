@@ -14,6 +14,7 @@
 %{
 impl_types = {
   'RawRepresentable': 'RawRepresentableImpl',
+  'RawRepresentable & Codable': 'RawRepresentableImpl',
   'Codable': 'CodableImpl',
   'Bool': 'UserDefaultImpl',
   'Int': 'UserDefaultImpl',
@@ -23,6 +24,7 @@ impl_types = {
 }
 operators = {
   'RawRepresentable': ':',
+  'RawRepresentable & Codable': ':',
   'Codable': ':',
   'Bool': '==',
   'Int': '==',
@@ -31,6 +33,43 @@ operators = {
   'String': '==',
 }
 types = list(impl_types.keys())
+docs = {
+  'RawRepresentable': [
+    'Creates a property that stores a `RawRepresentable` value as its raw value.',
+    '',
+    '`T.RawValue` must be a property list type, such as `String` or `Int`.',
+    'Reading the property returns `wrappedValue` when the key holds no value of',
+    "type `T.RawValue`, or a raw value that `T(rawValue:)` rejects. Assigning",
+    '`nil` to an optional property removes the key.',
+  ],
+  'RawRepresentable & Codable': [
+    'Creates a property that stores a value that is both `RawRepresentable`',
+    'and `Codable` as its raw value.',
+    '',
+    'Raw-value storage takes precedence over JSON storage. The value is stored',
+    'exactly as it would be without its `Codable` conformance, so adding',
+    '`Codable` to a raw-value type keeps its stored values readable.',
+    '`T.RawValue` must be a property list type, such as `String` or `Int`.',
+    'Reading the property returns `wrappedValue` when the key holds no value of',
+    "type `T.RawValue`, or a raw value that `T(rawValue:)` rejects. Assigning",
+    '`nil` to an optional property removes the key.',
+  ],
+  'Codable': [
+    'Creates a property that stores a `Codable` value as JSON data.',
+    '',
+    'Reading the property returns `wrappedValue` when the key holds no data, or',
+    "data that `JSONDecoder` can't decode as `T`. Assigning `nil` to an optional",
+    "property removes the key. Assigning a value that `JSONEncoder` can't encode",
+    'stops the program.',
+  ],
+}
+for direct_type in ['Bool', 'Int', 'Float', 'Double', 'String']:
+  docs[direct_type] = [
+    f'Creates a property that stores a `{direct_type}` value directly.',
+    '',
+    'Reading the property returns `wrappedValue` when the key holds no value',
+    f'that can be cast to `{direct_type}`.',
+  ]
 }%
 import class Foundation.UserDefaults
 
@@ -59,6 +98,9 @@ import class Foundation.UserDefaults
 /// - `RawRepresentable` values are stored as their `rawValue`, which must be a
 ///   property list type such as `String` or `Int`.
 /// - `Codable` values are stored as JSON data.
+/// - Values of a type that is both `RawRepresentable` and `Codable`, such as
+///   `enum Mode: String, Codable`, are stored as their `rawValue`. Raw-value
+///   storage takes precedence over JSON storage.
 ///
 /// Reading the property returns its default value when the key holds no
 /// value, or a value that can't be read as `T`, such as data that
@@ -84,6 +126,16 @@ public struct UserDefault<T> {
 %     impl_type = impl_types[type]
 %     operator = operators[type]
 
+% for line in docs[type]:
+  ///${' ' + line if line else ''}
+% end
+  ///
+  /// - Parameters:
+  ///   - wrappedValue: The default value, which reading returns when the key
+  ///     holds no readable value.
+  ///   - key: The key under which to store the value.
+  ///   - userDefaults: The defaults database to use. The default is
+  ///     `UserDefaults.standard`.
   public init(
     wrappedValue: T,
     key: String,
@@ -94,6 +146,17 @@ public struct UserDefault<T> {
     self.impl = ${impl_type}(userDefaults)
   }
   
+% for line in docs[type]:
+  ///${' ' + line if line else ''}
+% end
+  ///
+  /// - Parameters:
+  ///   - wrappedValue: The default value, which reading returns when the key
+  ///     holds no readable value.
+  ///   - key: A value whose `String` raw value is the key under which to
+  ///     store the value.
+  ///   - userDefaults: The defaults database to use. The default is
+  ///     `UserDefaults.standard`.
   public init<Key>(
     wrappedValue: T,
     key: Key,
