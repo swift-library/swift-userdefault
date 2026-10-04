@@ -110,13 +110,18 @@ public extension UserDefaultWrapper where Value: Decodable {
   
   /// Returns the `Decodable` object associated with the specified key.
   ///
-  /// - Parameters:
-  ///   - forKey: A key in the current user‘s defaults database.
+  /// The stored value must be JSON data that `JSONDecoder` can decode as
+  /// `Value`. Otherwise this method returns `nil`, and `UserDefault` returns
+  /// the property's default value.
+  ///
+  /// - Parameter defaultName: A key in the current user‘s defaults database.
+  /// - Returns: The decoded value, or `nil` if the key holds no data or the
+  ///   data can't be decoded as `Value`.
   func object(forKey defaultName: String) -> Value? {
     do {
       return try userDefaults.object(forKey: defaultName)
     } catch {
-      fatalError(error.localizedDescription)
+      return nil
     }
   }
 }

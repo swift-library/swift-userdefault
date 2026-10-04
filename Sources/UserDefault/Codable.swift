@@ -38,8 +38,9 @@ public extension UserDefaults {
     
   /// Returns the `Codable` object associated with the specified key.
   ///
-  /// - Parameters:
-  ///   - forKey: A key in the current user‘s defaults database.
+  /// - Parameter defaultName: A key in the current user‘s defaults database.
+  /// - Returns: The value decoded from the JSON data stored under the key, or
+  ///   `nil` if the key holds no data.
   /// - Throws: `DecodingError.dataCorrupted` if values requested from the payload are corrupted, or if the given data is not valid JSON.
   /// An error if any value throws an error during decoding.
   @_spi(Private)
