@@ -13,72 +13,87 @@
 //===----------------------------------------------------------------------===//
 
 import XCTest
-import UserDefault
-@_spi(Private) @testable import UserDefaultUtils
+@_spi(Private) import UserDefault
+import UserDefaultUtils
 
 final class UserDefaultTests: XCTestCase {
   
-  public enum Keys: String, CaseIterable {
+  static let suiteName = "swift-userdefault.UserDefaultTests"
+  static let userDefaults = UserDefaults(suiteName: suiteName)!
+  
+  public enum Keys: String {
     case model
     case version
     case safetyCheckerDisclaimer
     case computeUnits
   }
   ///
-  @UserDefault(key: Keys.model, userDefaults: .standard)
+  @UserDefault(key: Keys.model, userDefaults: UserDefaultTests.userDefaults)
   public var currentModel: ModelInfo! = nil
   ///
-  @UserDefault(key: Keys.version, userDefaults: .standard)
+  @UserDefault(key: Keys.version, userDefaults: UserDefaultTests.userDefaults)
   public var version: Int = 0
   ///
-  @UserDefault(key: Keys.safetyCheckerDisclaimer)
+  @UserDefault(key: Keys.safetyCheckerDisclaimer, userDefaults: UserDefaultTests.userDefaults)
   public var safetyCheckerDisclaimerRead = false
   ///
-  @UserDefault(key: Keys.computeUnits)
+  @UserDefault(key: Keys.computeUnits, userDefaults: UserDefaultTests.userDefaults)
   public var systemComputeUnits: ComputeUnits? = .cpuOnly
   ///
-  @UserDefault(key: Keys.computeUnits)
-  public var preferdComputeUnits: ComputeUnits = ComputeUnits.cpuAndNeuralEngine
+  @UserDefault(key: Keys.computeUnits, userDefaults: UserDefaultTests.userDefaults)
+  public var preferredComputeUnits: ComputeUnits = ComputeUnits.cpuAndNeuralEngine
   
-  var userDefaults: UserDefaults = .init()
+  var userDefaults: UserDefaults { Self.userDefaults }
   
-  override func setUp() async throws {
-    flush()
+  override func setUp() {
+    super.setUp()
+    userDefaults.removePersistentDomain(forName: Self.suiteName)
   }
   
-  override func tearDown() async throws {
-    flush()
+  override func tearDown() {
+    userDefaults.removePersistentDomain(forName: Self.suiteName)
+    super.tearDown()
   }
   
   func testAnyValueToUserDefaultWrapper() throws {
     var userDefaultValue: Bool? {
-      self.userDefaults.object(forKey: Keys.safetyCheckerDisclaimer.rawValue) as? Bool
+      userDefaults.object(forKey: Keys.safetyCheckerDisclaimer.rawValue) as? Bool
     }
     XCTAssertFalse(safetyCheckerDisclaimerRead)
     XCTAssertNil(userDefaultValue)
     
-    self.safetyCheckerDisclaimerRead = true
-    XCTAssertTrue(userDefaultValue!)
+    safetyCheckerDisclaimerRead = true
+    XCTAssertEqual(userDefaultValue, true)
     
     userDefaults.set(false, forKey: Keys.safetyCheckerDisclaimer.rawValue)
     XCTAssertEqual(safetyCheckerDisclaimerRead, false)
+  }
+  
+  func testIntValueToUserDefaultWrapper() throws {
+    XCTAssertEqual(version, 0)
+    
+    version = 2
+    XCTAssertEqual(userDefaults.object(forKey: Keys.version.rawValue) as? Int, 2)
+    
+    userDefaults.set(3, forKey: Keys.version.rawValue)
+    XCTAssertEqual(version, 3)
   }
   
   func testRawRepresentableToUserDefaultWrapper() throws {
     var computeUnits: Int? {
       userDefaults.object(forKey: Keys.computeUnits.rawValue) as? Int
     }
-    XCTAssertEqual(preferdComputeUnits, .cpuAndNeuralEngine)
+    XCTAssertEqual(preferredComputeUnits, .cpuAndNeuralEngine)
     XCTAssertNil(computeUnits)
 
-    preferdComputeUnits = .cpuOnly
+    preferredComputeUnits = .cpuOnly
     XCTAssertEqual(computeUnits, ComputeUnits.cpuOnly.rawValue)
 
     userDefaults.set(ComputeUnits.cpuAndGPU, forKey: Keys.computeUnits.rawValue)
-    XCTAssertEqual(preferdComputeUnits, .cpuAndGPU)
+    XCTAssertEqual(preferredComputeUnits, .cpuAndGPU)
   }
   
-  func testOptioanlRawRepresentableToUserDefaultWrapper() throws {
+  func testOptionalRawRepresentableToUserDefaultWrapper() throws {
     var computeUnits: Int? {
       userDefaults.object(forKey: Keys.computeUnits.rawValue) as? Int
     }
@@ -120,15 +135,11 @@ final class UserDefaultTests: XCTestCase {
   
   func modelInfo() -> ModelInfo {
     let modelInfo: ModelInfo = .init(
-      modelId: "modelPaht/modelId",
+      modelId: "modelPath/modelId",
       modelVersion: "0.1.0",
       originalAttentionSuffix: "original_compiled",
       splitAttentionSuffix: "split_einsum_compiled",
       supportsEncoder: true)
     return modelInfo
-  }
-  
-  func flush() {
-    Keys.allCases.map { $0.rawValue }.forEach(userDefaults.removeObject(forKey:))
   }
 }
