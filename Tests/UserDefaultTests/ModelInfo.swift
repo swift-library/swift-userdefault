@@ -12,7 +12,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-struct ModelInfo: Codable {
+struct ModelInfo: Codable, Equatable {
   /// Hugging Face model Id that contains .zip archives with compiled Core ML models
   let modelId: String
   
@@ -27,16 +27,4 @@ struct ModelInfo: Codable {
   
   /// Whether the archive contains the VAE Encoder (for image to image tasks). Not yet in use.
   let supportsEncoder: Bool
-}
-
-extension ModelInfo: Equatable {
-  
-  static func ==(lhs: ModelInfo, rhs: ModelInfo) -> Bool {
-    lhs.modelId == rhs.modelId &&
-    lhs.modelId == rhs.modelId &&
-    lhs.modelVersion == rhs.modelVersion &&
-    lhs.originalAttentionSuffix == rhs.originalAttentionSuffix &&
-    lhs.splitAttentionSuffix == rhs.splitAttentionSuffix &&
-    lhs.supportsEncoder == rhs.supportsEncoder
-  }
 }
