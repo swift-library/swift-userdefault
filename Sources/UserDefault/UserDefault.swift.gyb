@@ -60,7 +60,7 @@ docs = {
     'Reading the property returns `wrappedValue` when the key holds no data, or',
     "data that `JSONDecoder` can't decode as `T`. Assigning `nil` to an optional",
     "property removes the key. Assigning a value that `JSONEncoder` can't encode",
-    'stops the program.',
+    'leaves the stored value unchanged, and debug builds stop at an assertion.',
   ],
 }
 for direct_type in ['Bool', 'Int', 'Float', 'Double', 'String']:

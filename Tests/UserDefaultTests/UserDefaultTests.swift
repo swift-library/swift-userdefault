@@ -248,7 +248,26 @@ final class UserDefaultTests: XCTestCase {
     try userDefaults.set(nil as ModelInfo?, forKey: codableKey)
     XCTAssertNil(userDefaults.object(forKey: codableKey))
   }
-  
+
+  // Debug builds stop at the encoding assertion; run with `swift test -c release`.
+  #if !DEBUG
+  func testEncodingFailureKeepsPreviousValue() throws {
+    struct Reading: Codable, Equatable {
+      var value: Double
+    }
+    @UserDefault(key: "reading", userDefaults: UserDefaultTests.userDefaults)
+    var reading = Reading(value: 0)
+
+    reading = Reading(value: 1)
+    let stored = userDefaults.data(forKey: "reading")
+    XCTAssertNotNil(stored)
+
+    reading = Reading(value: .nan)
+    XCTAssertEqual(userDefaults.data(forKey: "reading"), stored)
+    XCTAssertEqual(reading, Reading(value: 1))
+  }
+  #endif
+
   func modelInfo() -> ModelInfo {
     let modelInfo: ModelInfo = .init(
       modelId: "modelPath/modelId",

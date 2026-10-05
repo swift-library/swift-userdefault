@@ -171,8 +171,9 @@ The property's type selects how the value is stored:
   are encoded with `JSONEncoder` and stored as `Data`. If the key holds data
   that cannot be decoded as the property's type, or a value that is not data,
   reading returns the default. If a value cannot be encoded, for example a
-  `Double.nan` inside a model, assigning it stops the program with
-  `fatalError`.
+  `Double.nan` inside a model, assigning it leaves the stored value unchanged.
+  Debug builds stop at an assertion, so the mistake shows up during
+  development.
 - A type that is both `RawRepresentable` and `Codable`, such as
   `enum Mode: String, Codable`, is stored as its `rawValue`. Raw-value storage
   takes precedence over JSON, so adding `Codable` to an enumeration does not

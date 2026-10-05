@@ -92,8 +92,8 @@ public extension UserDefaultWrapper where Value: Encodable {
   /// Sets the `Encodable` value of the specified default key.
   ///
   /// The value is stored as JSON data. Passing `nil`, or an optional value
-  /// that is `nil`, removes the key. A value that `JSONEncoder` can't encode
-  /// stops the program.
+  /// that is `nil`, removes the key. If `JSONEncoder` can't encode the value,
+  /// the stored value stays unchanged and debug builds stop at an assertion.
   ///
   /// - Parameters:
   ///   - value: The value to store in the defaults database.
@@ -102,7 +102,7 @@ public extension UserDefaultWrapper where Value: Encodable {
     do {
       try userDefaults.set(value, forKey: defaultName)
     } catch {
-      fatalError(error.localizedDescription)
+      assertionFailure("Can't encode the value for key \"\(defaultName)\": \(error)")
     }
   }
 }
