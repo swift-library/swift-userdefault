@@ -21,8 +21,8 @@
 [License](#license)
 
 > [!NOTE]
-> swift-userdefault has no tagged release yet, so depend on the `master`
-> branch. Changes on `master` may break source compatibility.
+> swift-userdefault is pre-1.0. Minor releases may include breaking changes, so
+> depend on it with `.upToNextMinor(from:)`.
 
 ## Overview
 
@@ -49,7 +49,7 @@ Add the package and the `UserDefault` product to `Package.swift`:
 dependencies: [
   .package(
     url: "https://github.com/swift-library/swift-userdefault.git",
-    branch: "master"
+    .upToNextMinor(from: "0.1.0")
   ),
 ],
 targets: [
@@ -251,9 +251,12 @@ as JSON data.
 ## Contributing
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request. This
-project follows the [code of conduct](CODE_OF_CONDUCT.md).
+project follows the [code of conduct](CODE_OF_CONDUCT.md). Run `Scripts/check`
+before submitting changes; it runs the tests in debug and release builds.
+Releases follow the swift-library
+[versioning standard](https://github.com/swift-library/.github/blob/master/VERSIONING.md).
 
 ## License
 
 swift-userdefault is available under the Apache License 2.0 with the Swift
-Runtime Library Exception. See [LICENSE.txt](LICENSE.txt).
+Runtime Library Exception. See [LICENSE.txt](LICENSE.txt) and [NOTICE](NOTICE).
