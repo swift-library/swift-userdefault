@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/swift-library/swift-gyb",
       "state" : {
-        "revision" : "4e1834bcca8e1970c6ff97a210f93042ba324dae",
-        "version" : "0.0.2"
+        "revision" : "cfbc24aff7ef1542fb5004eb7e0e146d594924d9",
+        "version" : "0.1.0"
       }
     }
   ],

@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
   name: "swift-userdefault",
-  platforms: [.macOS(.v10_13), .iOS(.v11), .tvOS(.v11), .watchOS(.v4)],
+  platforms: [.macOS(.v12), .iOS(.v15), .tvOS(.v15), .watchOS(.v9)],
   products: [
     // Products define the executables and libraries a package produces, making them visible to other packages.
     .library(
@@ -24,7 +24,7 @@ let package = Package(
       ]),
   ],
   dependencies: [
-    .package(url: "https://github.com/swift-library/swift-gyb", from: "0.0.2"),
+    .package(url: "https://github.com/swift-library/swift-gyb", .upToNextMinor(from: "0.1.0")),
   ],
   targets: [
     // Targets are the basic building blocks of a package, defining a module or a test suite.
