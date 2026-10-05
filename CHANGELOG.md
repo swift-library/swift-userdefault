@@ -1,10 +1,10 @@
-# CHANGELOG
+# Changelog
 
-<!-- 
-Add new items at the end of the relevant section under **Unreleased**.
--->
+## Unreleased
 
-## [Unreleased]
+## 0.1.0
+
+The first tagged release.
 
 ### Added
 
@@ -16,6 +16,8 @@ Add new items at the end of the relevant section under **Unreleased**.
 ### Changed
 
 - The minimum Swift tools version is 5.8, the version swift-gyb requires.
+- The minimum platforms are macOS 12, iOS 15, tvOS 15 and watchOS 9, the
+  oldest targets Xcode 27 builds for.
 - Assigning `nil` to an optional `Codable` property removes its key instead of
   storing JSON `null`.
 
@@ -23,8 +25,8 @@ Add new items at the end of the relevant section under **Unreleased**.
 
 - Resolving the package failed with "product 'Gyb' required by package
   'swift-userdefault' target 'UserDefault' not found in package 'swift-gyb'".
-  swift-userdefault now requires swift-gyb 0.0.2 and uses its `GybPlugin`
-  build tool plugin, so dependents no longer need to pin swift-gyb 0.0.1.
+  swift-userdefault now depends on swift-gyb 0.1.x and uses its `GybPlugin`
+  build tool plugin.
 - Assigning `nil` to an optional `RawRepresentable` property, such as an
   optional enumeration with `UserDefaultUtils`, crashed with "Attempt to set a
   non-property-list object <null>". It now removes the key.
@@ -33,19 +35,12 @@ Add new items at the end of the relevant section under **Unreleased**.
 - A property whose type is both `RawRepresentable` and `Codable` failed to
   compile with an ambiguous initializer error. It now stores the `rawValue`;
   raw-value storage takes precedence over JSON.
+- Assigning a `Codable` value that `JSONEncoder` can't encode stopped the
+  program with `fatalError`. The stored value now stays unchanged, and debug
+  builds stop at an assertion.
+- `UserDefaultUtils` no longer triggers the retroactive conformance warning for
+  `Optional: RawRepresentable` on Swift 5.10 and later.
 - `Optional`'s `init?(rawValue:)` in `UserDefaultUtils` returned `nil` wrapped
   in `.some` for a raw value that matched no case, so an optional enumeration
   read `nil` instead of its default value. The initializer now fails for an
   unmatched raw value.
-
----
-
-## [0.0.1] - 2023-05-02
-
-- `UserDefault` initial release.
-
-<!-- Link references for releases -->
-
-[Unreleased]: https://github.com/swift-library/swift-userdefault/compare/0.0.1...HEAD
-[0.0.2]: https://github.com/swift-library/swift-userdefault/compare/0.0.1...0.0.2
-[0.0.1]: https://github.com/swift-library/swift-userdefault/releases/tag/0.0.1
