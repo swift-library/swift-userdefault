@@ -242,6 +242,9 @@ as JSON data.
 
 ## Documentation
 
+- [Module documentation](Sources/UserDefault/UserDefault.docc/UserDefault.md):
+  the public API reference and module overview.
+
 - API reference: doc comments on `UserDefault`, its initializers, and
   `UserDefaultWrapper` describe each storage format and when reading returns
   the default value. In Xcode, choose Product > Build Documentation to browse
