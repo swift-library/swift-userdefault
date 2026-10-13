@@ -1,14 +1,15 @@
 {
+  "originHash" : "37701aa02cd9c946b3612b0c0a2b274984529b6f74490e8a89686dbc150d1239",
   "pins" : [
     {
       "identity" : "swift-gyb",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/swift-library/swift-gyb",
       "state" : {
-        "revision" : "cfbc24aff7ef1542fb5004eb7e0e146d594924d9",
-        "version" : "0.1.0"
+        "revision" : "a024080b44e9546715a3dc72bb2d57a9463cde97",
+        "version" : "0.2.0"
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }
