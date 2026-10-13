@@ -19,7 +19,7 @@ import UserDefaultUtils
 final class UserDefaultTests: XCTestCase {
   
   static let suiteName = "swift-userdefault.UserDefaultTests"
-  static let userDefaults = UserDefaults(suiteName: suiteName)!
+  static var userDefaults: UserDefaults { UserDefaults(suiteName: suiteName)! }
   
   public enum Keys: String {
     case model

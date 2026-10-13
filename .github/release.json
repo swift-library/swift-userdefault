@@ -23,5 +23,28 @@
         "command": "xcodebuild -scheme swift-userdefault-Package -destination generic/platform=iOS -derivedDataPath .build/xcode -skipPackagePluginValidation build"
       }
     ]
+  },
+  "minimum_swift": "6.0",
+  "platforms": {
+    "iOS": [
+      18,
+      26,
+      27
+    ],
+    "macOS": [
+      15,
+      26,
+      27
+    ],
+    "tvOS": [
+      18,
+      26,
+      27
+    ],
+    "watchOS": [
+      11,
+      26,
+      27
+    ]
   }
 }
