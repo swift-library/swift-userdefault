@@ -2,7 +2,11 @@
 
 ## Unreleased
 
+## 0.2.0
+
 - Require Swift 6.0 or later. Upgrade the toolchain before adopting this release.
+- Adopt swift-gyb 0.2.x for source generation. Consumers sharing this dependency
+  must update their Gyb requirement to 0.2.x.
 
 ## 0.1.0
 
