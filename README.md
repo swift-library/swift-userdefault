@@ -108,8 +108,9 @@ Choose a key, a default value, and an optional `UserDefaults` store. The [usage 
 ## Contributing
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request. This
-project follows the [code of conduct](https://github.com/swift-library/.github/blob/master/CODE_OF_CONDUCT.md). Run `Scripts/check`
-before submitting changes; it runs the tests in debug and release builds.
+project follows the [code of conduct](https://github.com/swift-library/.github/blob/master/CODE_OF_CONDUCT.md).
+Run the local validation commands in the contribution guide before submitting
+changes, including tests in debug and release builds.
 Releases follow the swift-library
 [versioning standard](https://github.com/swift-library/.github/blob/master/VERSIONING.md).
 

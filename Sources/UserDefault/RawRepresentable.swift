@@ -16,8 +16,8 @@ import class Foundation.UserDefaults
 
 /// FIXME: @showxu use [swift/gyb.py](https://github.com/apple/swift/blob/main/utils/gyb.py) plugin to generate `String`, `Float`, `Double`, `Bool`, `URL`
 @_spi(Private)
-public extension UserDefaults {
-  
+extension UserDefaults {
+
   /// Sets the value of the specified default key to the raw value of the
   /// specified `RawRepresentable` value.
   ///
@@ -26,16 +26,16 @@ public extension UserDefaults {
   /// - Parameters:
   ///   - value: The `RawRepresentable` value whose `rawValue` to store in the defaults database.
   ///   - defaultName: The key with which to associate the value.
-  func set<T>(_ value: T?, forKey defaultName: String) where T: RawRepresentable {
+  public func set<T>(_ value: T?, forKey defaultName: String) where T: RawRepresentable {
     setPropertyListValue(value?.rawValue, forKey: defaultName)
   }
-  
+
   /// Returns the `RawRepresentable` value whose raw value is associated with the specified key.
   ///
   /// - Parameter defaultName: A key in the current user‘s defaults database.
   /// - Returns: The value created from the stored raw value, or `nil` if the key
   ///   holds no value of type `T.RawValue` or `T(rawValue:)` rejects the stored value.
-  func object<T>(forKey defaultName: String) -> T? where T: RawRepresentable {
+  public func object<T>(forKey defaultName: String) -> T? where T: RawRepresentable {
     /// In case of `nil as? Optional<Optional<T.RawValue>>` will produce `Optional<Optional<nil>>`
     guard let value = object(forKey: defaultName) else {
       return nil
