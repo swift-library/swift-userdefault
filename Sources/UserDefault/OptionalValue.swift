@@ -33,7 +33,7 @@ func unwrapped(_ value: Any?) -> Any? {
 }
 
 extension UserDefaults {
-  
+
   /// Stores a property list value, or removes the key when the value is `nil`
   /// at any level of optional nesting.
   ///

@@ -6,9 +6,11 @@ Read `README.md` and `CONTRIBUTING.md` before editing.
 
 - `Package.swift` owns products, targets and dependencies.
 - `Sources/` owns implementation and colocated module DocC catalogs.
-- `Tests/` owns behavior checks; `Scripts/check` is the package validation entry point.
+- `Tests/` owns behavior checks, including release-mode encoding failure coverage.
+- `.github/swift-package.json` owns CI validation; `CONTRIBUTING.md` lists local
+  build, debug and release test, release build and strict formatting commands.
 - `README.md` owns installation and usage; `CHANGELOG.md` owns release history.
-- `.github/release.json` owns release inputs and CI selection.
+- `.github/release.json` owns release inputs.
 - Keep machine-specific paths, generated build output and temporary state in
   ignored local output directories. Preserve source and dependency notices.
 

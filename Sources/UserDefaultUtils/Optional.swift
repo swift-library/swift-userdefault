@@ -20,11 +20,11 @@
 /// The raw value of `nil` is `nil`, and the raw value of a wrapped value is
 /// the wrapped value's raw value.
 extension Swift.Optional: Swift.RawRepresentable where Wrapped: RawRepresentable {
-  
+
   public var rawValue: Wrapped.RawValue? {
     map { $0.rawValue }
   }
-  
+
   /// Creates an optional from a raw value.
   ///
   /// A `nil` raw value creates `nil`. A raw value that `Wrapped(rawValue:)`

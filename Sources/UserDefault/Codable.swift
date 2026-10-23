@@ -14,8 +14,8 @@
 
 import Foundation.NSUserDefaults
 
-public extension UserDefaults {
-  
+extension UserDefaults {
+
   /// Sets the `Codable` value of the specified default key.
   ///
   /// The value is stored as JSON data. Passing `nil`, or an optional value
@@ -27,7 +27,7 @@ public extension UserDefaults {
   /// - Throws: `EncodingError.invalidValue` if a non-conforming floating-point value is encountered during encoding, and the encoding strategy is `.throw`.
   /// An error if any value throws an error during encoding.
   @_spi(Private)
-  func set<T: Encodable>(_ value: T?, forKey defaultName: String) throws {
+  public func set<T: Encodable>(_ value: T?, forKey defaultName: String) throws {
     guard let value, unwrapped(value) != nil else {
       removeObject(forKey: defaultName)
       return
@@ -35,7 +35,7 @@ public extension UserDefaults {
     let data: Any = try JSONEncoder().encode(value)
     set(data, forKey: defaultName)
   }
-    
+
   /// Returns the `Codable` object associated with the specified key.
   ///
   /// - Parameter defaultName: A key in the current user‘s defaults database.
@@ -44,7 +44,7 @@ public extension UserDefaults {
   /// - Throws: `DecodingError.dataCorrupted` if values requested from the payload are corrupted, or if the given data is not valid JSON.
   /// An error if any value throws an error during decoding.
   @_spi(Private)
-  func object<T: Decodable>(forKey defaultName: String) throws -> T? {
+  public func object<T: Decodable>(forKey defaultName: String) throws -> T? {
     try data(forKey: defaultName).map { (T.self, $0) }.map(JSONDecoder().decode)
   }
 }

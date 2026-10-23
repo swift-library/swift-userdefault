@@ -17,11 +17,11 @@ import class Foundation.UserDefaults
 /// A wrapper that wrap UserDefaults set/get value operations.
 ///
 public protocol UserDefaultWrapper<Value> {
-  
+
   associatedtype Value
 
   var userDefaults: UserDefaults { get }
-  
+
   /// Set object into UserDefaults, immediately stores a value (or removes the value if nil is passed as the value)
   ///
   /// The value parameter can be only property list objects: `NSData`, `NSString`, `NSNumber`, `NSDate`, `NSArray`, or `NSDictionary`. For `NSArray` and `NSDictionary` objects, their contents must be property list objects. For more information, see What is a Property List? in Property List Programming Guide.
@@ -31,7 +31,7 @@ public protocol UserDefaultWrapper<Value> {
   ///   - value: The object to store in the defaults database.
   ///   - defaultName: The key with which to associate the value.
   func set(_ value: Value?, forKey defaultName: String)
-  
+
   /// Fetch object from UserDefaults, will search the receiver's search list for a default with the key 'defaultName' and return it.
   ///
   /// This method searches the domains included in the search list in the order in which they are listed and returns the object associated with the first occurrence of the specified default.
@@ -41,7 +41,7 @@ public protocol UserDefaultWrapper<Value> {
   func object(forKey defaultName: String) -> Value?
 }
 
-public extension UserDefaultWrapper where Value: Any {
+extension UserDefaultWrapper where Value: Any {
 
   /// Sets the value of the specified default key.
   ///
@@ -50,7 +50,7 @@ public extension UserDefaultWrapper where Value: Any {
   /// - Parameters:
   ///   - value: The object to store in the defaults database.
   ///   - defaultName: The key with which to associate the value.
-  func set(_ value: Value?, forKey defaultName: String) {
+  public func set(_ value: Value?, forKey defaultName: String) {
     userDefaults.setPropertyListValue(value, forKey: defaultName)
   }
 
@@ -58,14 +58,14 @@ public extension UserDefaultWrapper where Value: Any {
   ///
   /// - Parameter defaultName: A key in the current user‘s defaults database.
   /// - Returns: The object associated with the specified key, or nil if the key was not found.
-  func object(forKey defaultName: String) -> Value? {
+  public func object(forKey defaultName: String) -> Value? {
     userDefaults.object(forKey: defaultName) as? Value
   }
 }
 
 /// FIXME: @showxu use [swift/gyb.py](https://github.com/apple/swift/blob/main/utils/gyb.py) plugin to generate `Float`, `Double`, `Bool`, `URL`
-public extension UserDefaultWrapper where Value: RawRepresentable {
-  
+extension UserDefaultWrapper where Value: RawRepresentable {
+
   /// Sets the value of the specified default key to the raw value of the specified value.
   ///
   /// Passing `nil`, or a value whose raw value is `nil`, removes the key.
@@ -73,22 +73,22 @@ public extension UserDefaultWrapper where Value: RawRepresentable {
   /// - Parameters:
   ///   - value: The value whose `rawValue` to store in the defaults database.
   ///   - defaultName: The key with which to associate the value.
-  func set(_ value: Value?, forKey defaultName: String) {
+  public func set(_ value: Value?, forKey defaultName: String) {
     userDefaults.set(value.flatMap { $0 }, forKey: defaultName)
   }
-  
+
   /// Returns the value whose raw value is associated with the specified key.
   ///
   /// - Parameter defaultName: A key in the current user‘s defaults database.
   /// - Returns: The value created from the stored raw value, or `nil` if the key
   ///   holds no value of type `Value.RawValue` or `Value(rawValue:)` rejects the stored value.
-  func object(forKey defaultName: String) -> Value? {
+  public func object(forKey defaultName: String) -> Value? {
     userDefaults.object(forKey: defaultName)
   }
 }
 
-public extension UserDefaultWrapper where Value: Encodable {
-  
+extension UserDefaultWrapper where Value: Encodable {
+
   /// Sets the `Encodable` value of the specified default key.
   ///
   /// The value is stored as JSON data. Passing `nil`, or an optional value
@@ -98,7 +98,7 @@ public extension UserDefaultWrapper where Value: Encodable {
   /// - Parameters:
   ///   - value: The value to store in the defaults database.
   ///   - defaultName: The key with which to associate the value.
-  func set(_ value: Value?, forKey defaultName: String) {
+  public func set(_ value: Value?, forKey defaultName: String) {
     do {
       try userDefaults.set(value, forKey: defaultName)
     } catch {
@@ -106,9 +106,9 @@ public extension UserDefaultWrapper where Value: Encodable {
     }
   }
 }
-  
-public extension UserDefaultWrapper where Value: Decodable {
-  
+
+extension UserDefaultWrapper where Value: Decodable {
+
   /// Returns the `Decodable` object associated with the specified key.
   ///
   /// The stored value must be JSON data that `JSONDecoder` can decode as
@@ -118,7 +118,7 @@ public extension UserDefaultWrapper where Value: Decodable {
   /// - Parameter defaultName: A key in the current user‘s defaults database.
   /// - Returns: The decoded value, or `nil` if the key holds no data or the
   ///   data can't be decoded as `Value`.
-  func object(forKey defaultName: String) -> Value? {
+  public func object(forKey defaultName: String) -> Value? {
     do {
       return try userDefaults.object(forKey: defaultName)
     } catch {

@@ -14,7 +14,7 @@ let package = Package(
         "UserDefault",
         "UserDefaultUtils",
       ]),
-    
+
     .library(
       name: "DynamicUserDefault",
       type: .dynamic,
@@ -24,23 +24,23 @@ let package = Package(
       ]),
   ],
   dependencies: [
-    .package(url: "https://github.com/swift-library/swift-gyb", .upToNextMinor(from: "0.2.0")),
+    .package(url: "https://github.com/swift-library/swift-gyb", .upToNextMinor(from: "0.2.0"))
   ],
   targets: [
     // Targets are the basic building blocks of a package, defining a module or a test suite.
     // Targets can depend on other targets in this package and products from dependencies.
     .target(
       name: "UserDefaultUtils", dependencies: ["UserDefault"]),
-    
+
     .target(
       name: "UserDefault",
       plugins: [.plugin(name: "GybPlugin", package: "swift-gyb")]),
-    
+
     .testTarget(
       name: "UserDefaultTests",
       dependencies: [
         "UserDefault",
-        "UserDefaultUtils"
+        "UserDefaultUtils",
       ]),
   ]
 )

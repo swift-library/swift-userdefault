@@ -15,16 +15,16 @@
 struct ModelInfo: Codable, Equatable {
   /// Hugging Face model Id that contains .zip archives with compiled Core ML models
   let modelId: String
-  
+
   /// Arbitrary string for presentation purposes. Something like "2.1-base"
   let modelVersion: String
-  
+
   /// Suffix of the archive containing the ORIGINAL attention variant. Usually something like "original_compiled"
   let originalAttentionSuffix: String
-  
+
   /// Suffix of the archive containing the SPLIT_EINSUM attention variant. Usually something like "split_einsum_compiled"
   let splitAttentionSuffix: String
-  
+
   /// Whether the archive contains the VAE Encoder (for image to image tasks). Not yet in use.
   let supportsEncoder: Bool
 }
