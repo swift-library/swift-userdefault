@@ -19,9 +19,10 @@ Read `README.md` and `CONTRIBUTING.md` before editing.
 ### Compatibility and versioning
 
 - Flag a change to public API or observable behavior, including a raised
-  minimum platform or Swift version, without the change record and version
-  bump the [organization versioning standard](https://github.com/swift-library/.github/blob/master/VERSIONING.md) requires. Safe
-  path: record the change under the next version with that bump.
+  minimum platform or Swift version, without the change record the
+  [organization versioning standard](https://github.com/swift-library/.github/blob/master/VERSIONING.md) requires. Safe
+  path: record breaking changes under `## Unreleased` with a **Breaking**
+  marker naming any new minimums. Assign the version at release time.
 
 ### Claims
 
